@@ -51,7 +51,10 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 /* ── LIST ── */
 .mk-card { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: var(--shadow); overflow: hidden; }
 .mk-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+.mk-title-wrap { display: flex; align-items: center; gap: 10px; flex: 1; }
 .mk-title { font-weight: 700; color: #1E40AF; font-size: 15px; }
+.mk-actions { display: flex; align-items: center; gap: 8px; }
+
 .dropdown-trigger { width: 32px; height: 32px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1E40AF; cursor: pointer; border: none; font-size: 10px; transition: 0.3s; }
 .mk-card.open .dropdown-trigger { transform: rotate(180deg); background: var(--rose); color: white; }
 .mk-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 15px; }
@@ -66,9 +69,9 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 .done .t-name { text-decoration: line-through; opacity: 0.6; }
 .t-dl { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-.actions { display: flex; gap: 8px; }
-.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.6; }
+.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.5; }
 .btn-action:hover { opacity: 1; transform: scale(1.1); }
+.btn-edit-mk { font-size: 14px; }
 
 /* ── POP UP EDIT ── */
 #edit-modal {
@@ -85,10 +88,10 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 
 .modal-content h3 { font-family: 'Playfair Display'; color: #1E40AF; margin-bottom: 20px; }
 .modal-content label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; margin-left: 5px;}
-.modal-content input { margin-bottom: 12px; border: 1.5px solid #E2E8F0; }
+.modal-content input { margin-bottom: 12px; border: 1.5px solid #E2E8F0; width: 100%; padding: 12px; border-radius: 10px; box-sizing: border-box; font-family: 'Nunito'; outline: none; }
 
 .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; }
+.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito'; }
 .btn-save { background: var(--rose); color: white; }
 .btn-cancel { background: #F1F5F9; color: var(--muted); }
 
@@ -100,13 +103,19 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 
 <div id="edit-modal">
   <div class="modal-content">
-    <h3>✏️ Edit Data</h3>
-    <label>Mata Kuliah</label>
-    <input type="text" id="modal-mk-name">
-    <label>Nama Kegiatan</label>
-    <input type="text" id="modal-task-name">
-    <label>Deadline</label>
-    <input type="text" id="modal-task-dl">
+    <h3 id="modal-title">✏️ Edit Data</h3>
+    <div id="modal-fields">
+      <div id="field-mk">
+        <label>Mata Kuliah</label>
+        <input type="text" id="modal-mk-name">
+      </div>
+      <div id="field-task">
+        <label>Nama Kegiatan</label>
+        <input type="text" id="modal-task-name">
+        <label>Deadline</label>
+        <input type="text" id="modal-task-dl">
+      </div>
+    </div>
     <div class="modal-btns">
       <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
       <button class="btn-modal btn-save" id="btn-confirm-save">Simpan ✨</button>
@@ -163,6 +172,8 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 let db = JSON.parse(localStorage.getItem('hz_db_final')) || [];
 let openState = JSON.parse(localStorage.getItem('hz_open_state')) || {};
 let currentEditId = null;
+let currentEditMkOnly = false;
+let currentMkOrigin = "";
 
 function startApp() {
   const name = document.getElementById('in-welcome-name').value;
@@ -200,12 +211,27 @@ function deleteItem(id) {
   if(confirm("Hapus tugas ini?")) { db = db.filter(x => x.id !== id); save(); }
 }
 
-function openEditModal(id) {
+// ── LOGIKA EDIT BARU (DUAL MODE) ──
+function openEditTask(id) {
   currentEditId = id;
+  currentEditMkOnly = false;
   const item = db.find(x => x.id === id);
+  document.getElementById('modal-title').textContent = "✏️ Edit Tugas";
+  document.getElementById('field-mk').style.display = "block";
+  document.getElementById('field-task').style.display = "block";
   document.getElementById('modal-mk-name').value = item.mk;
   document.getElementById('modal-task-name').value = item.task;
   document.getElementById('modal-task-dl').value = item.dl;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function openEditMk(mk) {
+  currentEditMkOnly = true;
+  currentMkOrigin = mk;
+  document.getElementById('modal-title').textContent = "📘 Edit Nama Matkul";
+  document.getElementById('field-mk').style.display = "block";
+  document.getElementById('field-task').style.display = "none";
+  document.getElementById('modal-mk-name').value = mk;
   document.getElementById('edit-modal').style.display = 'flex';
 }
 
@@ -215,18 +241,23 @@ function closeModal() {
 }
 
 document.getElementById('btn-confirm-save').onclick = function() {
-  if (currentEditId) {
+  const newMk = document.getElementById('modal-mk-name').value.trim();
+  
+  if (currentEditMkOnly) {
+    if (newMk !== "") {
+      db.forEach(item => { if(item.mk === currentMkOrigin) item.mk = newMk; });
+      openState[newMk] = openState[currentMkOrigin];
+      delete openState[currentMkOrigin];
+      save();
+      closeModal();
+    }
+  } else {
     const i = db.findIndex(x => x.id === currentEditId);
-    const newMk = document.getElementById('modal-mk-name').value.trim();
     const newTask = document.getElementById('modal-task-name').value.trim();
     const newDl = document.getElementById('modal-task-dl').value.trim();
     if (newMk !== "" && newTask !== "") {
-      db[i].mk = newMk;
-      db[i].task = newTask;
-      db[i].dl = newDl;
-      openState[newMk] = true; 
-      save();
-      closeModal();
+      db[i].mk = newMk; db[i].task = newTask; db[i].dl = newDl;
+      openState[newMk] = true; save(); closeModal();
     }
   }
 };
@@ -269,15 +300,28 @@ function render() {
   keys.forEach(mk => {
     const card = document.createElement('div');
     card.className = `mk-card ${openState[mk] ? 'open' : ''}`;
-    card.innerHTML = `<div class="mk-head"><div class="mk-title">📘 ${mk}</div><button class="dropdown-trigger" onclick="toggleDropdown('${mk}')">▼</button></div>`;
+    card.innerHTML = `
+      <div class="mk-head">
+        <div class="mk-title-wrap">
+          <div class="mk-title">📘 ${mk}</div>
+          <div class="btn-action btn-edit-mk" onclick="openEditMk('${mk}')">✏️</div>
+        </div>
+        <button class="dropdown-trigger" onclick="toggleDropdown('${mk}')">▼</button>
+      </div>`;
+    
     const details = document.createElement('div');
     details.className = "mk-detail";
     grouped[mk].forEach(item => {
       const row = document.createElement('div');
       row.className = `task-row ${item.done ? 'done' : ''}`;
       row.onclick = (e) => { if (!e.target.closest('.btn-action')) toggleTask(item.id, row); };
-      row.innerHTML = `<div class="chk"></div><div class="t-info"><div class="t-name">${item.task}</div><div class="t-dl">⏰ ${item.dl || 'N/A'}</div></div>
-        <div class="actions"><div class="btn-action btn-edit" onclick="openEditModal(${item.id})">✏️</div><div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div></div>`;
+      row.innerHTML = `
+        <div class="chk"></div>
+        <div class="t-info"><div class="t-name">${item.task}</div><div class="t-dl">⏰ ${item.dl || 'N/A'}</div></div>
+        <div class="actions">
+          <div class="btn-action" onclick="openEditTask(${item.id})">✏️</div>
+          <div class="btn-action" onclick="deleteItem(${item.id})">×</div>
+        </div>`;
       details.appendChild(row);
     });
     card.appendChild(details);
