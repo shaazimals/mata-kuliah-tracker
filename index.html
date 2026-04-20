@@ -92,11 +92,11 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 @keyframes slideUp { from { transform: translateY(30px); } to { transform: translateY(0); } }
 
 .modal-content h3 { font-family: 'Playfair Display'; color: #1E40AF; margin-bottom: 20px; }
-.modal-content label { display: block; text-align: left; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 5px; margin-left: 5px;}
-.modal-content input { margin-bottom: 15px; border: 1.5px solid #E2E8F0; }
+.modal-content label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; margin-left: 5px;}
+.modal-content input { margin-bottom: 12px; border: 1.5px solid #E2E8F0; }
 .modal-content input:focus { border-color: var(--rose); }
 
-.modal-btns { display: flex; gap: 10px; margin-top: 10px; }
+.modal-btns { display: flex; gap: 10px; margin-top: 15px; }
 .btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito'; }
 .btn-save { background: var(--rose); color: white; }
 .btn-cancel { background: #F1F5F9; color: var(--muted); }
@@ -109,11 +109,17 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 
 <div id="edit-modal">
   <div class="modal-content">
-    <h3>✏️ Edit Tugas</h3>
-    <label>Nama Kegiatan</label>
+    <h3>✏️ Edit Data</h3>
+    
+    <label>Mata Kuliah</label>
+    <input type="text" id="modal-mk-name">
+
+    <label>Nama Kegiatan / Tugas</label>
     <input type="text" id="modal-task-name">
+
     <label>Deadline</label>
     <input type="text" id="modal-task-dl">
+
     <div class="modal-btns">
       <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
       <button class="btn-modal btn-save" id="btn-confirm-save">Simpan ✨</button>
@@ -179,6 +185,7 @@ let currentEditId = null;
 function startApp() {
   const name = document.getElementById('in-welcome-name').value;
   if(!name) return alert("Isi namamu dulu dong bestie!");
+  localStorage.setItem('hz_bestie_name', name);
   sessionStorage.setItem('bestie_name', name);
   initUI(name);
   document.getElementById('landing-screen').style.display = 'none';
@@ -212,10 +219,11 @@ function deleteItem(id) {
   if(confirm("Hapus tugas ini?")) { db = db.filter(x => x.id !== id); save(); }
 }
 
-// ── LOGIKA MODAL EDIT BARU ──
+// ── LOGIKA MODAL EDIT (MATKUL & TUGAS) ──
 function openEditModal(id) {
   currentEditId = id;
   const item = db.find(x => x.id === id);
+  document.getElementById('modal-mk-name').value = item.mk;
   document.getElementById('modal-task-name').value = item.task;
   document.getElementById('modal-task-dl').value = item.dl;
   document.getElementById('edit-modal').style.display = 'flex';
@@ -229,16 +237,22 @@ function closeModal() {
 document.getElementById('btn-confirm-save').onclick = function() {
   if (currentEditId) {
     const i = db.findIndex(x => x.id === currentEditId);
-    const newName = document.getElementById('modal-task-name').value;
-    const newDl = document.getElementById('modal-task-dl').value;
+    const newMk = document.getElementById('modal-mk-name').value.trim();
+    const newTask = document.getElementById('modal-task-name').value.trim();
+    const newDl = document.getElementById('modal-task-dl').value.trim();
     
-    if (newName.trim() !== "") {
-      db[i].task = newName;
+    if (newMk !== "" && newTask !== "") {
+      db[i].mk = newMk;
+      db[i].task = newTask;
       db[i].dl = newDl;
+      
+      // Jika matkul berubah, pastikan kotak barunya terbuka
+      openState[newMk] = true; 
+      
       save();
       closeModal();
     } else {
-      alert("Nama tugas nggak boleh kosong ya!");
+      alert("Matkul dan Nama tugas wajib diisi!");
     }
   }
 };
@@ -325,7 +339,11 @@ function starBurst(el) {
 
 function askName() {
   const n = prompt("Ganti nama kamu, bestie?");
-  if(n) { sessionStorage.setItem('bestie_name', n); initUI(n); }
+  if(n) { 
+    localStorage.setItem('hz_bestie_name', n);
+    sessionStorage.setItem('bestie_name', n); 
+    initUI(n); 
+  }
 }
 
 window.onload = () => {
