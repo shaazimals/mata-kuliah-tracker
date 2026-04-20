@@ -10,7 +10,6 @@
   --bg: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0; --text: #1E293B; --muted: #64748B;
   --rose: #2563EB; --sky: #0EA5E9; --shadow: 0 4px 20px rgba(30, 41, 59, 0.05);
 }
-
 body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; padding-bottom: 60px; margin: 0; overflow-x: hidden; }
 
 /* ── LANDING SCREEN ── */
@@ -33,7 +32,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .crafted-by { font-size: 11px; color: var(--rose); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 10px; }
 .session-box { display: inline-block; padding: 6px 16px; background: white; border-radius: 20px; border: 1px solid var(--border); font-size: 11px; color: #1E40AF; font-weight: 700; cursor: pointer; }
 
-/* ── PROGRESS CARD ── */
 .prog-card { background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #6366F1 100%); border-radius: 30px; padding: 30px; color: white; margin-top: 20px; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2); }
 .prog-row { display: flex; justify-content: space-between; align-items: flex-start; }
 .prog-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; line-height: 1; }
@@ -41,13 +39,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-se
 .prog-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 20px; }
 .prog-fill { height: 100%; background: white; transition: 0.6s; }
 
-/* ── MINI STATS ── */
 .mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 30px; }
 .ms { background: white; border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); }
 .ms-n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1E40AF; }
 .ms-l { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 5px; }
 
-/* ── FORM ── */
 .add-form { background: #EFF6FF; padding: 20px; border-radius: 20px; margin: 25px 0; border: 1px dashed var(--rose); }
 input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #BFDBFE; font-family: 'Nunito'; outline: none; box-sizing: border-box;}
 .btn-submit { width: 100%; background: var(--rose); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
@@ -62,42 +58,37 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 .mk-card.open .mk-detail { max-height: 2000px; padding: 5px 15px 20px; border-top: 1px solid #F1F5F9; }
 
 .task-row { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 12px; cursor: pointer; margin-top: 8px; position: relative; transition: 0.2s; }
-.task-row:hover { background: #F8FAFC; }
 .chk { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; flex-shrink: 0; position: relative; }
 .done .chk { background: #93C5FD; border-color: #93C5FD; }
 .done .chk::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: 900; }
 .t-info { flex: 1; }
 .t-name { font-size: 14px; font-weight: 700; color: #64748B; }
-.done .t-name { text-decoration: line-through; }
+.done .t-name { text-decoration: line-through; opacity: 0.6; }
 .t-dl { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-/* ── ACTION BUTTONS ── */
 .actions { display: flex; gap: 8px; }
 .btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.6; }
 .btn-action:hover { opacity: 1; transform: scale(1.1); }
 
-/* ── POP UP EDIT (MODAL) ── */
+/* ── POP UP EDIT ── */
 #edit-modal {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(4px);
   display: none; align-items: center; justify-content: center; z-index: 20000;
-  animation: fadeIn 0.3s ease;
 }
 .modal-content {
   background: white; width: 90%; max-width: 380px; border-radius: 25px;
   padding: 25px; box-shadow: var(--shadow); text-align: center;
-  position: relative; animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(30px); } to { transform: translateY(0); } }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 .modal-content h3 { font-family: 'Playfair Display'; color: #1E40AF; margin-bottom: 20px; }
 .modal-content label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; margin-left: 5px;}
 .modal-content input { margin-bottom: 12px; border: 1.5px solid #E2E8F0; }
-.modal-content input:focus { border-color: var(--rose); }
 
 .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito'; }
+.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; }
 .btn-save { background: var(--rose); color: white; }
 .btn-cancel { background: #F1F5F9; color: var(--muted); }
 
@@ -110,16 +101,12 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 <div id="edit-modal">
   <div class="modal-content">
     <h3>✏️ Edit Data</h3>
-    
     <label>Mata Kuliah</label>
     <input type="text" id="modal-mk-name">
-
-    <label>Nama Kegiatan / Tugas</label>
+    <label>Nama Kegiatan</label>
     <input type="text" id="modal-task-name">
-
     <label>Deadline</label>
     <input type="text" id="modal-task-dl">
-
     <div class="modal-btns">
       <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
       <button class="btn-modal btn-save" id="btn-confirm-save">Simpan ✨</button>
@@ -139,17 +126,12 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
   <div class="header">
     <div class="crafted-by">CRAFTED BY HAAZIMA</div>
     <h1 style="font-family: 'Playfair Display';">Matkul <em>Tracker</em></h1>
-    <div style="margin-top: 15px;">
-        <div class="session-box" onclick="askName()">👤 Bestie: <span id="user-display">...</span></div>
-    </div>
+    <div style="margin-top: 15px;"><div class="session-box" onclick="askName()">👤 Bestie: <span id="user-display">...</span></div></div>
   </div>
 
   <div class="prog-card">
     <div class="prog-row">
-      <div>
-        <div class="prog-num" id="g-done">0</div>
-        <div style="font-size:12px; opacity:0.8; margin-top:5px;">tugas selesai</div>
-      </div>
+      <div><div class="prog-num" id="g-done">0</div><div style="font-size:12px; opacity:0.8; margin-top:5px;">tugas selesai</div></div>
       <div class="prog-pct-big" id="g-pct">0%</div>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width: 0%"></div></div>
@@ -207,7 +189,6 @@ function addItem() {
   const task = document.getElementById('in-task').value.trim();
   const dl = document.getElementById('in-dl').value.trim();
   if(!mk || !task) return alert("Matkul & Tugas wajib diisi!");
-
   db.push({ id: Date.now(), mk, task, dl, done: false });
   openState[mk] = true;
   document.getElementById('in-task').value = "";
@@ -219,7 +200,6 @@ function deleteItem(id) {
   if(confirm("Hapus tugas ini?")) { db = db.filter(x => x.id !== id); save(); }
 }
 
-// ── LOGIKA MODAL EDIT (MATKUL & TUGAS) ──
 function openEditModal(id) {
   currentEditId = id;
   const item = db.find(x => x.id === id);
@@ -240,19 +220,13 @@ document.getElementById('btn-confirm-save').onclick = function() {
     const newMk = document.getElementById('modal-mk-name').value.trim();
     const newTask = document.getElementById('modal-task-name').value.trim();
     const newDl = document.getElementById('modal-task-dl').value.trim();
-    
     if (newMk !== "" && newTask !== "") {
       db[i].mk = newMk;
       db[i].task = newTask;
       db[i].dl = newDl;
-      
-      // Jika matkul berubah, pastikan kotak barunya terbuka
       openState[newMk] = true; 
-      
       save();
       closeModal();
-    } else {
-      alert("Matkul dan Nama tugas wajib diisi!");
     }
   }
 };
@@ -269,7 +243,6 @@ function toggleDropdown(mk) { openState[mk] = !openState[mk]; save(); }
 function render() {
   const container = document.getElementById('main-list');
   container.innerHTML = "";
-
   const done = db.filter(x => x.done).length;
   const total = db.length;
   const pct = total ? Math.round((done/total)*100) : 0;
@@ -277,7 +250,6 @@ function render() {
   document.getElementById('g-done').textContent = done;
   document.getElementById('g-pct').textContent = pct + "%";
   document.getElementById('g-fill').style.width = pct + "%";
-
   document.getElementById('stat-diskusi').textContent = db.filter(x => x.task.toLowerCase().includes('diskusi') && x.done).length;
   document.getElementById('stat-tugas').textContent = db.filter(x => x.task.toLowerCase().includes('tugas') && x.done).length;
   document.getElementById('stat-pct').textContent = pct + "%";
@@ -303,21 +275,9 @@ function render() {
     grouped[mk].forEach(item => {
       const row = document.createElement('div');
       row.className = `task-row ${item.done ? 'done' : ''}`;
-      
-      row.onclick = (e) => {
-        if (!e.target.closest('.btn-action')) toggleTask(item.id, row);
-      };
-
-      row.innerHTML = `
-        <div class="chk"></div>
-        <div class="t-info">
-          <div class="t-name">${item.task}</div>
-          <div class="t-dl">⏰ ${item.dl || 'N/A'}</div>
-        </div>
-        <div class="actions">
-          <div class="btn-action btn-edit" onclick="openEditModal(${item.id})">✏️</div>
-          <div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div>
-        </div>`;
+      row.onclick = (e) => { if (!e.target.closest('.btn-action')) toggleTask(item.id, row); };
+      row.innerHTML = `<div class="chk"></div><div class="t-info"><div class="t-name">${item.task}</div><div class="t-dl">⏰ ${item.dl || 'N/A'}</div></div>
+        <div class="actions"><div class="btn-action btn-edit" onclick="openEditModal(${item.id})">✏️</div><div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div></div>`;
       details.appendChild(row);
     });
     card.appendChild(details);
@@ -339,11 +299,7 @@ function starBurst(el) {
 
 function askName() {
   const n = prompt("Ganti nama kamu, bestie?");
-  if(n) { 
-    localStorage.setItem('hz_bestie_name', n);
-    sessionStorage.setItem('bestie_name', n); 
-    initUI(n); 
-  }
+  if(n) { localStorage.setItem('hz_bestie_name', n); sessionStorage.setItem('bestie_name', n); initUI(n); }
 }
 
 window.onload = () => {
