@@ -51,9 +51,8 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 /* ── LIST ── */
 .mk-card { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: var(--shadow); overflow: hidden; }
 .mk-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.mk-title-wrap { display: flex; align-items: center; gap: 10px; flex: 1; }
+.mk-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
 .mk-title { font-weight: 700; color: #1E40AF; font-size: 15px; }
-.mk-actions { display: flex; align-items: center; gap: 8px; }
 
 .dropdown-trigger { width: 32px; height: 32px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1E40AF; cursor: pointer; border: none; font-size: 10px; transition: 0.3s; }
 .mk-card.open .dropdown-trigger { transform: rotate(180deg); background: var(--rose); color: white; }
@@ -69,9 +68,11 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 .done .t-name { text-decoration: line-through; opacity: 0.6; }
 .t-dl { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.5; }
+.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.5; display: flex; align-items: center; justify-content: center; }
 .btn-action:hover { opacity: 1; transform: scale(1.1); }
-.btn-edit-mk { font-size: 14px; }
+.btn-edit-main { color: var(--muted); font-size: 14px; }
+.btn-edit-task { color: var(--rose); font-size: 15px; }
+.btn-del { color: #EF4444; }
 
 /* ── POP UP EDIT ── */
 #edit-modal {
@@ -103,14 +104,14 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
 
 <div id="edit-modal">
   <div class="modal-content">
-    <h3 id="modal-title">✏️ Edit Data</h3>
+    <h3 id="modal-title">⚙️ Konfigurasi Data</h3>
     <div id="modal-fields">
       <div id="field-mk">
-        <label>Mata Kuliah</label>
+        <label>Nama Mata Kuliah</label>
         <input type="text" id="modal-mk-name">
       </div>
       <div id="field-task">
-        <label>Nama Kegiatan</label>
+        <label>Detail Kegiatan</label>
         <input type="text" id="modal-task-name">
         <label>Deadline</label>
         <input type="text" id="modal-task-dl">
@@ -118,7 +119,7 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
     </div>
     <div class="modal-btns">
       <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
-      <button class="btn-modal btn-save" id="btn-confirm-save">Simpan ✨</button>
+      <button class="btn-modal btn-save" id="btn-confirm-save">Perbarui ✨</button>
     </div>
   </div>
 </div>
@@ -135,7 +136,7 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
   <div class="header">
     <div class="crafted-by">CRAFTED BY HAAZIMA</div>
     <h1 style="font-family: 'Playfair Display';">Matkul <em>Tracker</em></h1>
-    <div style="margin-top: 15px;"><div class="session-box" onclick="askName()">👤 Bestie: <span id="user-display">...</span></div></div>
+    <div style="margin-top: 15px;"><div class="session-box" onclick="askName()">👤 User: <span id="user-display">...</span></div></div>
   </div>
 
   <div class="prog-card">
@@ -154,17 +155,17 @@ input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; bo
   </div>
 
   <div class="add-form">
-    <input type="text" id="in-mk" placeholder="Nama Mata Kuliah...">
-    <input type="text" id="in-task" placeholder="Nama Tugas...">
+    <input type="text" id="in-mk" placeholder="Mata Kuliah...">
+    <input type="text" id="in-task" placeholder="Nama Tugas/Kegiatan...">
     <input type="text" id="in-dl" placeholder="Deadline (ex: 19 Apr)">
-    <button class="btn-submit" onclick="addItem()">Update Tracker</button>
+    <button class="btn-submit" onclick="addItem()">Tambahkan Tracker</button>
   </div>
 
   <div id="main-list"></div>
 
   <div style="text-align: center; padding: 40px 0; font-size: 11px; color: var(--muted);">
-    © 2026 · Crafted with ✨ by <b>Haazima Adbis 24.1</b><br>
-    Special for <b id="footer-display">...</b>
+    © 2026 · Built with ✨ by <b>Haazima Adbis 24.1</b><br>
+    Access for <b id="footer-display">...</b>
   </div>
 </div>
 
@@ -177,7 +178,7 @@ let currentMkOrigin = "";
 
 function startApp() {
   const name = document.getElementById('in-welcome-name').value;
-  if(!name) return alert("Isi namamu dulu dong bestie!");
+  if(!name) return alert("Masukan nama Anda.");
   localStorage.setItem('hz_bestie_name', name);
   sessionStorage.setItem('bestie_name', name);
   initUI(name);
@@ -208,15 +209,14 @@ function addItem() {
 }
 
 function deleteItem(id) {
-  if(confirm("Hapus tugas ini?")) { db = db.filter(x => x.id !== id); save(); }
+  if(confirm("Hapus item ini secara permanen?")) { db = db.filter(x => x.id !== id); save(); }
 }
 
-// ── LOGIKA EDIT BARU (DUAL MODE) ──
 function openEditTask(id) {
   currentEditId = id;
   currentEditMkOnly = false;
   const item = db.find(x => x.id === id);
-  document.getElementById('modal-title').textContent = "✏️ Edit Tugas";
+  document.getElementById('modal-title').textContent = "⚙️ Detail Modifikasi";
   document.getElementById('field-mk').style.display = "block";
   document.getElementById('field-task').style.display = "block";
   document.getElementById('modal-mk-name').value = item.mk;
@@ -228,7 +228,7 @@ function openEditTask(id) {
 function openEditMk(mk) {
   currentEditMkOnly = true;
   currentMkOrigin = mk;
-  document.getElementById('modal-title').textContent = "📘 Edit Nama Matkul";
+  document.getElementById('modal-title').textContent = "⚙️ Pengaturan Matkul";
   document.getElementById('field-mk').style.display = "block";
   document.getElementById('field-task').style.display = "none";
   document.getElementById('modal-mk-name').value = mk;
@@ -242,14 +242,12 @@ function closeModal() {
 
 document.getElementById('btn-confirm-save').onclick = function() {
   const newMk = document.getElementById('modal-mk-name').value.trim();
-  
   if (currentEditMkOnly) {
     if (newMk !== "") {
       db.forEach(item => { if(item.mk === currentMkOrigin) item.mk = newMk; });
       openState[newMk] = openState[currentMkOrigin];
       delete openState[currentMkOrigin];
-      save();
-      closeModal();
+      save(); closeModal();
     }
   } else {
     const i = db.findIndex(x => x.id === currentEditId);
@@ -293,7 +291,7 @@ function render() {
 
   const keys = Object.keys(grouped);
   if(keys.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--muted); font-size:13px;">Belum ada jadwal nih! ✨</div>`;
+    container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--muted); font-size:12px; border:1px dashed var(--border); border-radius:20px;">Belum ada data tracker tersimpan. ✨</div>`;
     return;
   }
 
@@ -304,7 +302,7 @@ function render() {
       <div class="mk-head">
         <div class="mk-title-wrap">
           <div class="mk-title">📘 ${mk}</div>
-          <div class="btn-action btn-edit-mk" onclick="openEditMk('${mk}')">✏️</div>
+          <div class="btn-action btn-edit-main" onclick="openEditMk('${mk}')">⚙️</div>
         </div>
         <button class="dropdown-trigger" onclick="toggleDropdown('${mk}')">▼</button>
       </div>`;
@@ -319,8 +317,8 @@ function render() {
         <div class="chk"></div>
         <div class="t-info"><div class="t-name">${item.task}</div><div class="t-dl">⏰ ${item.dl || 'N/A'}</div></div>
         <div class="actions">
-          <div class="btn-action" onclick="openEditTask(${item.id})">✏️</div>
-          <div class="btn-action" onclick="deleteItem(${item.id})">×</div>
+          <div class="btn-action btn-edit-task" onclick="openEditTask(${item.id})">⚙️</div>
+          <div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div>
         </div>`;
       details.appendChild(row);
     });
@@ -342,7 +340,7 @@ function starBurst(el) {
 }
 
 function askName() {
-  const n = prompt("Ganti nama kamu, bestie?");
+  const n = prompt("Ganti identitas pengguna?");
   if(n) { localStorage.setItem('hz_bestie_name', n); sessionStorage.setItem('bestie_name', n); initUI(n); }
 }
 
