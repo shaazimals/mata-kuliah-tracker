@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Matkul Tracker by Haazima</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0; --text: #1E293B; --muted: #64748B;
+  --rose: #2563EB; --sky: #0EA5E9; --shadow: 0 4px 20px rgba(30, 41, 59, 0.05);
+}
+
+body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; padding-bottom: 60px; margin: 0; overflow-x: hidden; }
+
+/* ── LANDING SCREEN ── */
+#landing-screen {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 10000; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.landing-content { text-align: center; width: 85%; max-width: 350px; }
+#in-welcome-name { 
+  width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #BFDBFE; 
+  font-family: 'Nunito'; font-size: 14px; text-align: center; outline: none; margin-bottom: 15px; box-sizing: border-box;
+}
+.btn-start { background: var(--rose); color: white; border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; }
+
+/* ── TRACKER CONTENT ── */
+.wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
+.header { padding: 40px 0 20px; text-align: center; }
+.crafted-by { font-size: 11px; color: var(--rose); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 10px; }
+.session-box { display: inline-block; padding: 6px 16px; background: white; border-radius: 20px; border: 1px solid var(--border); font-size: 11px; color: #1E40AF; font-weight: 700; cursor: pointer; }
+
+/* ── PROGRESS CARD ── */
+.prog-card { background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #6366F1 100%); border-radius: 30px; padding: 30px; color: white; margin-top: 20px; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2); }
+.prog-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.prog-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; line-height: 1; }
+.prog-pct-big { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; }
+.prog-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+.prog-fill { height: 100%; background: white; transition: 0.6s; }
+
+/* ── MINI STATS ── */
+.mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 30px; }
+.ms { background: white; border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.ms-n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1E40AF; }
+.ms-l { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 5px; }
+
+/* ── FORM ── */
+.add-form { background: #EFF6FF; padding: 20px; border-radius: 20px; margin: 25px 0; border: 1px dashed var(--rose); }
+input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #BFDBFE; font-family: 'Nunito'; outline: none; box-sizing: border-box;}
+.btn-submit { width: 100%; background: var(--rose); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+
+/* ── LIST ── */
+.mk-card { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: var(--shadow); overflow: hidden; }
+.mk-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+.mk-title { font-weight: 700; color: #1E40AF; font-size: 15px; }
+.dropdown-trigger { width: 32px; height: 32px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1E40AF; cursor: pointer; border: none; font-size: 10px; transition: 0.3s; }
+.mk-card.open .dropdown-trigger { transform: rotate(180deg); background: var(--rose); color: white; }
+.mk-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 15px; }
+.mk-card.open .mk-detail { max-height: 2000px; padding: 5px 15px 20px; border-top: 1px solid #F1F5F9; }
+
+.task-row { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 12px; cursor: pointer; margin-top: 8px; position: relative; transition: 0.2s; }
+.task-row:hover { background: #F8FAFC; }
+.chk { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; flex-shrink: 0; position: relative; }
+.done .chk { background: #93C5FD; border-color: #93C5FD; }
+.done .chk::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: 900; }
+.t-info { flex: 1; }
+.t-name { font-size: 14px; font-weight: 700; color: #64748B; }
+.done .t-name { text-decoration: line-through; }
+.t-dl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── ACTION BUTTONS ── */
+.actions { display: flex; gap: 8px; }
+.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.6; }
+.btn-action:hover { opacity: 1; transform: scale(1.1); }
+
+/* ── POP UP EDIT (MODAL) ── */
+#edit-modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; z-index: 20000;
+  animation: fadeIn 0.3s ease;
+}
+.modal-content {
+  background: white; width: 90%; max-width: 380px; border-radius: 25px;
+  padding: 25px; box-shadow: var(--shadow); text-align: center;
+  position: relative; animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(30px); } to { transform: translateY(0); } }
+
+.modal-content h3 { font-family: 'Playfair Display'; color: #1E40AF; margin-bottom: 20px; }
+.modal-content label { display: block; text-align: left; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 5px; margin-left: 5px;}
+.modal-content input { margin-bottom: 15px; border: 1.5px solid #E2E8F0; }
+.modal-content input:focus { border-color: var(--rose); }
+
+.modal-btns { display: flex; gap: 10px; margin-top: 10px; }
+.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito'; }
+.btn-save { background: var(--rose); color: white; }
+.btn-cancel { background: #F1F5F9; color: var(--muted); }
+
+.star { position: fixed; pointer-events: none; z-index: 9999; font-size: 20px; animation: star-fade 0.8s forwards; }
+@keyframes star-fade { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(180deg); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div id="edit-modal">
+  <div class="modal-content">
+    <h3>✏️ Edit Tugas</h3>
+    <label>Nama Kegiatan</label>
+    <input type="text" id="modal-task-name">
+    <label>Deadline</label>
+    <input type="text" id="modal-task-dl">
+    <div class="modal-btns">
+      <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-modal btn-save" id="btn-confirm-save">Simpan ✨</button>
+    </div>
+  </div>
+</div>
+
+<div id="landing-screen">
+  <div class="landing-content">
+    <h2 style="font-family:'Playfair Display'; color:#1E40AF;">🌊 Halo Bestie!</h2>
+    <input type="text" id="in-welcome-name" placeholder="Masukan namamu disini bestie">
+    <button class="btn-start" onclick="startApp()">Oke, Mulai Tracker! ✨</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="header">
+    <div class="crafted-by">CRAFTED BY HAAZIMA</div>
+    <h1 style="font-family: 'Playfair Display';">Matkul <em>Tracker</em></h1>
+    <div style="margin-top: 15px;">
+        <div class="session-box" onclick="askName()">👤 Bestie: <span id="user-display">...</span></div>
+    </div>
+  </div>
+
+  <div class="prog-card">
+    <div class="prog-row">
+      <div>
+        <div class="prog-num" id="g-done">0</div>
+        <div style="font-size:12px; opacity:0.8; margin-top:5px;">tugas selesai</div>
+      </div>
+      <div class="prog-pct-big" id="g-pct">0%</div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width: 0%"></div></div>
+  </div>
+
+  <div class="mini-stats">
+    <div class="ms"><div class="ms-n" id="stat-diskusi">0</div><div class="ms-l">Diskusi</div></div>
+    <div class="ms"><div class="ms-n" id="stat-tugas">0</div><div class="ms-l">Tugas</div></div>
+    <div class="ms"><div class="ms-n">-</div><div class="ms-l">UAS</div></div>
+    <div class="ms"><div class="ms-n" id="stat-pct">0%</div><div class="ms-l">Total</div></div>
+  </div>
+
+  <div class="add-form">
+    <input type="text" id="in-mk" placeholder="Nama Mata Kuliah...">
+    <input type="text" id="in-task" placeholder="Nama Tugas...">
+    <input type="text" id="in-dl" placeholder="Deadline (ex: 19 Apr)">
+    <button class="btn-submit" onclick="addItem()">Update Tracker</button>
+  </div>
+
+  <div id="main-list"></div>
+
+  <div style="text-align: center; padding: 40px 0; font-size: 11px; color: var(--muted);">
+    © 2026 · Crafted with ✨ by <b>Haazima Adbis 24.1</b><br>
+    Special for <b id="footer-display">...</b>
+  </div>
+</div>
+
+<script>
+let db = JSON.parse(localStorage.getItem('hz_db_final')) || [];
+let openState = JSON.parse(localStorage.getItem('hz_open_state')) || {};
+let currentEditId = null;
+
+function startApp() {
+  const name = document.getElementById('in-welcome-name').value;
+  if(!name) return alert("Isi namamu dulu dong bestie!");
+  sessionStorage.setItem('bestie_name', name);
+  initUI(name);
+  document.getElementById('landing-screen').style.display = 'none';
+}
+
+function initUI(name) {
+  document.getElementById('user-display').textContent = name;
+  document.getElementById('footer-display').textContent = name;
+}
+
+function save() {
+  localStorage.setItem('hz_db_final', JSON.stringify(db));
+  localStorage.setItem('hz_open_state', JSON.stringify(openState));
+  render();
+}
+
+function addItem() {
+  const mk = document.getElementById('in-mk').value.trim();
+  const task = document.getElementById('in-task').value.trim();
+  const dl = document.getElementById('in-dl').value.trim();
+  if(!mk || !task) return alert("Matkul & Tugas wajib diisi!");
+
+  db.push({ id: Date.now(), mk, task, dl, done: false });
+  openState[mk] = true;
+  document.getElementById('in-task').value = "";
+  document.getElementById('in-dl').value = "";
+  save();
+}
+
+function deleteItem(id) {
+  if(confirm("Hapus tugas ini?")) { db = db.filter(x => x.id !== id); save(); }
+}
+
+// ── LOGIKA MODAL EDIT BARU ──
+function openEditModal(id) {
+  currentEditId = id;
+  const item = db.find(x => x.id === id);
+  document.getElementById('modal-task-name').value = item.task;
+  document.getElementById('modal-task-dl').value = item.dl;
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('edit-modal').style.display = 'none';
+  currentEditId = null;
+}
+
+document.getElementById('btn-confirm-save').onclick = function() {
+  if (currentEditId) {
+    const i = db.findIndex(x => x.id === currentEditId);
+    const newName = document.getElementById('modal-task-name').value;
+    const newDl = document.getElementById('modal-task-dl').value;
+    
+    if (newName.trim() !== "") {
+      db[i].task = newName;
+      db[i].dl = newDl;
+      save();
+      closeModal();
+    } else {
+      alert("Nama tugas nggak boleh kosong ya!");
+    }
+  }
+};
+
+function toggleTask(id, el) {
+  const i = db.findIndex(x => x.id === id);
+  db[i].done = !db[i].done;
+  if(db[i].done) starBurst(el);
+  save();
+}
+
+function toggleDropdown(mk) { openState[mk] = !openState[mk]; save(); }
+
+function render() {
+  const container = document.getElementById('main-list');
+  container.innerHTML = "";
+
+  const done = db.filter(x => x.done).length;
+  const total = db.length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+
+  document.getElementById('g-done').textContent = done;
+  document.getElementById('g-pct').textContent = pct + "%";
+  document.getElementById('g-fill').style.width = pct + "%";
+
+  document.getElementById('stat-diskusi').textContent = db.filter(x => x.task.toLowerCase().includes('diskusi') && x.done).length;
+  document.getElementById('stat-tugas').textContent = db.filter(x => x.task.toLowerCase().includes('tugas') && x.done).length;
+  document.getElementById('stat-pct').textContent = pct + "%";
+
+  const grouped = db.reduce((acc, item) => {
+    if(!acc[item.mk]) acc[item.mk] = [];
+    acc[item.mk].push(item);
+    return acc;
+  }, {});
+
+  const keys = Object.keys(grouped);
+  if(keys.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--muted); font-size:13px;">Belum ada jadwal nih! ✨</div>`;
+    return;
+  }
+
+  keys.forEach(mk => {
+    const card = document.createElement('div');
+    card.className = `mk-card ${openState[mk] ? 'open' : ''}`;
+    card.innerHTML = `<div class="mk-head"><div class="mk-title">📘 ${mk}</div><button class="dropdown-trigger" onclick="toggleDropdown('${mk}')">▼</button></div>`;
+    const details = document.createElement('div');
+    details.className = "mk-detail";
+    grouped[mk].forEach(item => {
+      const row = document.createElement('div');
+      row.className = `task-row ${item.done ? 'done' : ''}`;
+      
+      row.onclick = (e) => {
+        if (!e.target.closest('.btn-action')) toggleTask(item.id, row);
+      };
+
+      row.innerHTML = `
+        <div class="chk"></div>
+        <div class="t-info">
+          <div class="t-name">${item.task}</div>
+          <div class="t-dl">⏰ ${item.dl || 'N/A'}</div>
+        </div>
+        <div class="actions">
+          <div class="btn-action btn-edit" onclick="openEditModal(${item.id})">✏️</div>
+          <div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div>
+        </div>`;
+      details.appendChild(row);
+    });
+    card.appendChild(details);
+    container.appendChild(card);
+  });
+}
+
+function starBurst(el) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+  for (let i = 0; i < 10; i++) {
+    const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '⭐';
+    s.style.left = cx + 'px'; s.style.top = cy + 'px';
+    const tx = (Math.random() - 0.5) * 200 + 'px', ty = (Math.random() - 0.5) * 200 + 'px';
+    s.style.setProperty('--tx', tx); s.style.setProperty('--ty', ty);
+    document.body.appendChild(s); setTimeout(() => s.remove(), 800);
+  }
+}
+
+function askName() {
+  const n = prompt("Ganti nama kamu, bestie?");
+  if(n) { sessionStorage.setItem('bestie_name', n); initUI(n); }
+}
+
+window.onload = () => {
+  const n = sessionStorage.getItem('bestie_name') || localStorage.getItem('hz_bestie_name');
+  if(n) { document.getElementById('landing-screen').style.display = 'none'; initUI(n); }
+  render();
+};
+</script>
+</body>
+</html>
