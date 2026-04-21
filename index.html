@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Academic Tracker Pro - Haazima</title>
+<title>Academic Tracker by Haazima</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -43,27 +43,26 @@ body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta San
 input.form-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1.5px solid var(--border); outline: none; box-sizing: border-box; font-family: inherit; }
 .btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-/* ── LIST & DROPDOWN ── */
+/* ── LIST ── */
 .course-group { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 18px; overflow: hidden; }
 .course-head { padding: 20px 24px; font-weight: 700; color: var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; }
 .dropdown-icon { width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s; font-size: 10px; }
-
-/* Indikator buka-tutup */
 .course-group.open .dropdown-icon { transform: rotate(180deg); }
 .task-container { display: none; border-top: 1px solid var(--border); background: white; }
 .course-group.open .task-container { display: block; }
 
 .task-item { display: flex; align-items: center; gap: 15px; padding: 18px 24px; border-bottom: 1px solid #F8FAFC; }
-.task-item:last-child { border-bottom: none; }
 .task-item.done { background: #F8FAFC; opacity: 0.6; }
 .check-box { width: 24px; height: 24px; border: 2.5px solid var(--border); border-radius: 8px; cursor: pointer; position: relative; flex-shrink: 0; }
 .done .check-box { background: var(--primary); border-color: var(--primary); }
 .done .check-box::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: bold; font-size: 14px; }
 
+/* ── COPYRIGHT STYLE ── */
+.footer-cp { text-align: center; padding: 30px 0 50px; opacity: 0.5; font-size: 10px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; color: var(--text); }
+
 /* ── MODAL ── */
 #edit-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 20000; }
 .modal-content { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; }
-
 .star { position: fixed; pointer-events: none; z-index: 9999; animation: burst 0.7s ease-out forwards; }
 </style>
 </head>
@@ -126,12 +125,15 @@ input.form-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radiu
   </div>
 
   <div id="main-list"></div>
+
+  <div class="footer-cp">
+    DEVELOPED BY HAAZIMA © 2026
+  </div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyodArJdO-_MFU1fxT6CSgXWcwbWUgwZPsFeYaa8pm8ec5hizXsB0yAz4-dzzedN2AlrQ/exec"; 
 
-// Menggunakan nama database yang sama agar SYNC
 let data = JSON.parse(localStorage.getItem('smarty_pro_db')) || [];
 let openStates = JSON.parse(localStorage.getItem('smarty_pro_open')) || {};
 
@@ -152,7 +154,7 @@ function addItem() {
 
   const newItem = { id: Date.now(), mk, task, dl, done: false };
   data.push(newItem);
-  openStates[mk] = true; // Langsung buka matkul yang baru ditambah
+  openStates[mk] = true;
   
   fetch(SCRIPT_URL, { 
     method: 'POST', 
@@ -164,7 +166,6 @@ function addItem() {
   save();
 }
 
-// Fungsi utama Dropdown
 function toggleDropdown(mk) {
   openStates[mk] = !openStates[mk];
   save();
@@ -236,18 +237,11 @@ function render() {
   Object.keys(grouped).forEach((mk) => {
     const card = document.createElement('div');
     const isOpen = openStates[mk];
-    
-    // Memberikan class "open" jika statusnya true
     card.className = `course-group fade-in ${isOpen ? 'open' : ''}`;
-    
     card.innerHTML = `
-      <div class="course-head" onclick="toggleDropdown('${mk}')">
-        <span>📘 ${mk}</span>
-        <div class="dropdown-icon">▼</div>
-      </div>
+      <div class="course-head" onclick="toggleDropdown('${mk}')"><span>📘 ${mk}</span><div class="dropdown-icon">▼</div></div>
       <div class="task-container"></div>
     `;
-
     const container = card.querySelector('.task-container');
     grouped[mk].forEach(item => {
       const row = document.createElement('div');
