@@ -3,120 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Academic Tracker by Haazima</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Academic Tracker Pro - Haazima</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --primary: #2563EB;   /* Royal Blue solid */
-  --secondary: #6366F1; /* Indigo Blue */
-  --bg: #F0F7FF;
-  --card: #FFFFFF;
-  --text: #1E293B;
-  --muted: #64748B;
-  --border: #E2E8F0;
+  --primary: #2563EB; --secondary: #6366F1; --bg: #F0F7FF; --card: #FFFFFF;
+  --text: #1E293B; --muted: #64748B; --border: #E2E8F0;
 }
-
-body { 
-  background: var(--bg); 
-  color: var(--text); 
-  font-family: 'Plus Jakarta Sans', sans-serif; 
-  margin: 0; 
-  padding-bottom: 60px; 
-  overflow-x: hidden; 
-}
+body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding-bottom: 60px; overflow-x: hidden; }
 
 /* ── ANIMATIONS ── */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes burst { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.3); opacity: 0; } }
-
 .fade-in { animation: fadeInUp 0.5s ease-out forwards; }
 
-/* ── LANDING SCREEN (HALO BESTIE) ── */
-#landing-screen {
-  position: fixed; inset: 0; background: #E9F2FE;
-  display: flex; align-items: center; justify-content: center; z-index: 10000;
-}
-.landing-content { 
-  text-align: center; width: 85%; max-width: 380px; padding: 40px; 
-  background: transparent;
-}
-.landing-content h2 { color: #1E3A8A; font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.landing-content input { 
-  width: 100%; padding: 16px; border-radius: 15px; border: 2px solid #BFDBFE; 
-  background: white; font-family: inherit; outline: none; margin-bottom: 15px; box-sizing: border-box; text-align: center;
-}
-.btn-start { 
-  width: 100%; background: var(--primary); color: white; border: none; padding: 16px; 
-  border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; 
-}
+/* ── LANDING SCREEN ── */
+#landing-screen { position: fixed; inset: 0; background: #E9F2FE; display: flex; align-items: center; justify-content: center; z-index: 10000; }
+.landing-content { text-align: center; width: 85%; max-width: 380px; padding: 40px; }
+.landing-content h2 { color: #1E3A8A; font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; }
+.landing-content input { width: 100%; padding: 16px; border-radius: 15px; border: 2px solid #BFDBFE; outline: none; margin-bottom: 15px; box-sizing: border-box; text-align: center; }
+.btn-start { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 15px; font-weight: 700; cursor: pointer; }
 
-/* ── LAYOUT ── */
+/* ── DASHBOARD ── */
 .wrap { max-width: 500px; margin: 0 auto; padding: 0 20px; }
 .header { padding: 45px 0 25px; text-align: center; }
 .brand-tag { font-size: 10px; font-weight: 800; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-
-/* ── DASHBOARD ── */
-.prog-card { 
-  background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-  border-radius: 28px; padding: 30px; color: white; box-shadow: 0 15px 30px rgba(37, 99, 235, 0.25);
-}
+.prog-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 28px; padding: 30px; color: white; box-shadow: 0 15px 30px rgba(37, 99, 235, 0.25); }
 .prog-info { display: flex; justify-content: space-between; align-items: baseline; }
 .prog-val { font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: -2px; }
 .prog-bar { height: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 20px; overflow: hidden; }
-.prog-fill { height: 100%; background: white; transition: 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.prog-fill { height: 100%; background: white; transition: 1s cubic-bezier(0.34, 1.56, 0.64, 1); width: 0%; }
 
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
 .stat-box { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 20px; text-align: center; backdrop-filter: blur(5px); }
 .stat-num { font-size: 1.5rem; font-weight: 700; display: block; }
-.stat-label { font-size: 9px; font-weight: 600; text-transform: uppercase; opacity: 0.8; letter-spacing: 1px; }
 
-/* ── FORM ── */
+/* ── LIST ── */
 .form-box { background: white; padding: 25px; border-radius: 24px; border: 1px solid var(--border); margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-input.form-input { 
-  width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; 
-  border: 1.5px solid var(--border); font-family: inherit; box-sizing: border-box; outline: none; transition: 0.2s; font-size: 14px;
-}
-input.form-input:focus { border-color: var(--primary); background: #F8FAFC; }
-.btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 14px; }
+input.form-input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1.5px solid var(--border); outline: none; box-sizing: border-box; }
+.btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; }
 
-/* ── LIST & ACCORDION ── */
 .course-group { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 18px; overflow: hidden; }
-.course-head { 
-  padding: 20px 24px; background: white; 
-  font-weight: 700; color: var(--primary); font-size: 16px;
-  display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-}
-.dropdown-icon { 
-  width: 28px; height: 28px; background: var(--primary); color: white; 
-  border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-  font-size: 10px; transition: 0.3s; 
-}
+.course-head { padding: 20px 24px; font-weight: 700; color: var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.dropdown-icon { width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 .course-group.open .dropdown-icon { transform: rotate(180deg); }
-
 .task-container { display: none; border-top: 1px solid var(--border); }
 .course-group.open .task-container { display: block; }
-
 .task-item { display: flex; align-items: center; gap: 15px; padding: 18px 24px; border-bottom: 1px solid var(--border); }
-.task-item:last-child { border-bottom: none; }
 .task-item.done { background: #F8FAFC; opacity: 0.6; }
-
-.check-box { width: 24px; height: 24px; border: 2.5px solid var(--border); border-radius: 8px; flex-shrink: 0; cursor: pointer; position: relative; transition: 0.2s; }
+.check-box { width: 24px; height: 24px; border: 2.5px solid var(--border); border-radius: 8px; cursor: pointer; position: relative; flex-shrink: 0; }
 .done .check-box { background: var(--primary); border-color: var(--primary); }
 .done .check-box::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: bold; font-size: 14px; }
 
-.task-info { flex: 1; }
-.task-name { font-size: 14px; font-weight: 600; }
-.done .task-name { text-decoration: line-through; }
-.task-date { font-size: 11px; color: var(--muted); margin-top: 3px; }
-
-.action-btn { font-size: 14px; cursor: pointer; color: var(--muted); padding: 5px; transition: 0.2s; }
-.action-btn:hover { color: var(--primary); transform: scale(1.1); }
-
 /* ── MODAL ── */
 #edit-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 20000; }
-.modal-content { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.modal-content { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; }
 
-.star { position: fixed; pointer-events: none; z-index: 9999; font-size: 18px; animation: burst 0.7s ease-out forwards; }
+.star { position: fixed; pointer-events: none; z-index: 9999; animation: burst 0.7s ease-out forwards; }
 </style>
 </head>
 <body>
@@ -124,9 +67,9 @@ input.form-input:focus { border-color: var(--primary); background: #F8FAFC; }
 <div id="edit-modal">
   <div class="modal-content">
     <h3 style="margin:0 0 20px; font-weight:800; color:var(--primary)">Edit Jadwal</h3>
-    <input type="text" id="edit-mk" class="form-input" placeholder="Mata Kuliah">
-    <input type="text" id="edit-task-name" class="form-input" placeholder="Nama Tugas">
-    <input type="text" id="edit-dl" class="form-input" placeholder="Deadline">
+    <input type="text" id="edit-mk" class="form-input">
+    <input type="text" id="edit-task-name" class="form-input">
+    <input type="text" id="edit-dl" class="form-input">
     <div style="display:flex; gap:10px; margin-top:10px;">
       <button class="btn-add" style="background:#F1F5F9; color:var(--muted)" onclick="closeModal()">Batal</button>
       <button class="btn-add" onclick="saveEdit()">Simpan ✨</button>
@@ -151,21 +94,21 @@ input.form-input:focus { border-color: var(--primary); background: #F8FAFC; }
   <div class="prog-card">
     <div class="prog-info">
       <div>
-        <div style="font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">Overall Progress</div>
+        <div style="font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase;">Overall Progress</div>
         <div class="prog-val" id="total-pct">0%</div>
       </div>
       <div id="task-count" style="font-size: 14px; font-weight: 600;">0/0 Selesai</div>
     </div>
-    <div class="prog-bar"><div class="prog-fill" id="fill-bar" style="width: 0%"></div></div>
+    <div class="prog-bar"><div class="prog-fill" id="fill-bar"></div></div>
     
     <div class="stats-grid">
         <div class="stat-box">
             <span class="stat-num" id="count-mk">0</span>
-            <span class="stat-label">Courses</span>
+            <span style="font-size: 9px; font-weight: 600; opacity: 0.8;">COURSES</span>
         </div>
         <div class="stat-box">
             <span class="stat-num" id="count-total">0</span>
-            <span class="stat-label">Schedules</span>
+            <span style="font-size: 9px; font-weight: 600; opacity: 0.8;">SCHEDULES</span>
         </div>
     </div>
   </div>
@@ -178,16 +121,12 @@ input.form-input:focus { border-color: var(--primary); background: #F8FAFC; }
   </div>
 
   <div id="main-list"></div>
-
-  <div style="text-align:center; padding: 40px 0; opacity: 0.5; font-size: 10px; letter-spacing: 1px; font-weight: 600;">
-    DEVELOPED BY HAAZIMA © 2026
-  </div>
 </div>
 
 <script>
-// --- DATABASE URL ---
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyodArJdO-_MFU1fxT6CSgXWcwbWUgwZPsFeYaa8pm8ec5hizXsB0yAz4-dzzedN2AlrQ/exec"; 
 
+// SYNC CORE: Memastikan database memanggil kunci yang sama
 let data = JSON.parse(localStorage.getItem('smarty_pro_db')) || [];
 let openStates = JSON.parse(localStorage.getItem('smarty_pro_open')) || {};
 
@@ -210,11 +149,10 @@ function addItem() {
   data.push(newItem);
   openStates[mk] = true;
   
-  // Kirim data baru ke Cloud
   fetch(SCRIPT_URL, { 
     method: 'POST', 
     mode: 'no-cors', 
-    body: JSON.stringify({ user, mk, task, cat: "ProClean", dl, status: "Tugas Baru" }) 
+    body: JSON.stringify({ user, mk, task, cat: "ProSync", dl, status: "Tugas Baru" }) 
   });
   
   document.getElementById('in-task').value = "";
@@ -251,18 +189,10 @@ function saveEdit() {
   data[idx].task = document.getElementById('edit-task-name').value;
   data[idx].dl = document.getElementById('edit-dl').value;
   
-  // KIRIM STATUS UPDATE KE CLOUD
   fetch(SCRIPT_URL, { 
     method: 'POST', 
     mode: 'no-cors', 
-    body: JSON.stringify({ 
-      user, 
-      mk: data[idx].mk, 
-      task: data[idx].task, 
-      cat: "ProClean", 
-      dl: data[idx].dl, 
-      status: "Update / Edit" 
-    }) 
+    body: JSON.stringify({ user, mk: data[idx].mk, task: data[idx].task, cat: "ProSync", dl: data[idx].dl, status: "Update / Edit" }) 
   });
 
   closeModal(); 
@@ -270,10 +200,7 @@ function saveEdit() {
 }
 
 function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
-
-function deleteTask(id) {
-  if(confirm("Hapus jadwal ini?")) { data = data.filter(x => x.id != id); save(); }
-}
+function deleteTask(id) { if(confirm("Hapus jadwal ini?")) { data = data.filter(x => x.id != id); save(); } }
 
 function save() {
   localStorage.setItem('smarty_pro_db', JSON.stringify(data));
@@ -304,28 +231,23 @@ function render() {
     const card = document.createElement('div');
     const isOpen = openStates[mk];
     card.className = `course-group fade-in ${isOpen ? 'open' : ''}`;
-    
     card.innerHTML = `
-      <div class="course-head" onclick="toggleDropdown('${mk}')">
-        <span>📘 ${mk}</span>
-        <div class="dropdown-icon">▼</div>
-      </div>
+      <div class="course-head" onclick="toggleDropdown('${mk}')"><span>📘 ${mk}</span><div class="dropdown-icon">▼</div></div>
       <div class="task-container"></div>
     `;
-
     const container = card.querySelector('.task-container');
     grouped[mk].forEach(item => {
       const row = document.createElement('div');
       row.className = `task-item ${item.done ? 'done' : ''}`;
       row.innerHTML = `
         <div class="check-box" onclick="toggleTask(${item.id}, this)"></div>
-        <div class="task-info" onclick="toggleTask(${item.id}, this)">
-          <div class="task-name">${item.task}</div>
-          <div class="task-date">⏰ ${item.dl || '-'}</div>
+        <div style="flex:1" onclick="toggleTask(${item.id}, this)">
+          <div style="font-weight:600; font-size:14px;">${item.task}</div>
+          <div style="font-size:11px; color:var(--muted)">⏰ ${item.dl || '-'}</div>
         </div>
-        <div style="display:flex; gap:12px; align-items:center;">
-          <div class="action-btn" onclick="openEdit(${item.id})">⚙️</div>
-          <div class="action-btn" style="color:#EF4444" onclick="deleteTask(${item.id})">×</div>
+        <div style="display:flex; gap:12px;">
+          <div style="cursor:pointer; opacity:0.5" onclick="openEdit(${item.id})">⚙️</div>
+          <div style="cursor:pointer; color:#EF4444; opacity:0.7" onclick="deleteTask(${item.id})">×</div>
         </div>
       `;
       container.appendChild(row);
@@ -336,16 +258,11 @@ function render() {
 
 function triggerBurst(el) {
   const rect = el.getBoundingClientRect();
-  for(let i=0; i<12; i++) {
-    const s = document.createElement('div');
-    s.className = 'star'; s.innerHTML = '●';
-    s.style.color = '#3B82F6';
-    s.style.left = (rect.left + rect.width/2) + 'px'; 
-    s.style.top = (rect.top + rect.height/2) + 'px';
-    s.style.setProperty('--tx', (Math.random()-0.5)*150+'px');
-    s.style.setProperty('--ty', (Math.random()-0.5)*150+'px');
-    document.body.appendChild(s);
-    setTimeout(() => s.remove(), 700);
+  for(let i=0; i<10; i++) {
+    const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '●';
+    s.style.color = '#3B82F6'; s.style.left = (rect.left + 10) + 'px'; s.style.top = (rect.top + 10) + 'px';
+    s.style.setProperty('--tx', (Math.random()-0.5)*150+'px'); s.style.setProperty('--ty', (Math.random()-0.5)*150+'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 700);
   }
 }
 
