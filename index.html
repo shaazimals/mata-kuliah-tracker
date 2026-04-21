@@ -3,351 +3,359 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Matkul Tracker by Haazima</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Academic Tracker by Haazima</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0; --text: #1E293B; --muted: #64748B;
-  --rose: #2563EB; --sky: #0EA5E9; --shadow: 0 4px 20px rgba(30, 41, 59, 0.05);
+  --primary: #2563EB;   /* Royal Blue solid */
+  --secondary: #6366F1; /* Indigo Blue */
+  --bg: #F0F7FF;
+  --card: #FFFFFF;
+  --text: #1E293B;
+  --muted: #64748B;
+  --border: #E2E8F0;
 }
-body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; padding-bottom: 60px; margin: 0; overflow-x: hidden; }
 
-/* ── LANDING SCREEN ── */
+body { 
+  background: var(--bg); 
+  color: var(--text); 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  margin: 0; 
+  padding-bottom: 60px; 
+  overflow-x: hidden; 
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes burst { 0% { transform: scale(0); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.3); opacity: 0; } }
+
+.fade-in { animation: fadeInUp 0.5s ease-out forwards; }
+
+/* ── LANDING SCREEN (HALO BESTIE) ── */
 #landing-screen {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 10000; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed; inset: 0; background: #E9F2FE;
+  display: flex; align-items: center; justify-content: center; z-index: 10000;
 }
-.landing-content { text-align: center; width: 85%; max-width: 350px; }
-#in-welcome-name { 
-  width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #BFDBFE; 
-  font-family: 'Nunito'; font-size: 14px; text-align: center; outline: none; margin-bottom: 15px; box-sizing: border-box;
+.landing-content { 
+  text-align: center; width: 85%; max-width: 380px; padding: 40px; 
+  background: transparent;
 }
-.btn-start { background: var(--rose); color: white; border: none; padding: 12px 30px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; }
-
-/* ── TRACKER CONTENT ── */
-.wrap { max-width: 480px; margin: 0 auto; padding: 0 16px; }
-.header { padding: 40px 0 20px; text-align: center; }
-.crafted-by { font-size: 11px; color: var(--rose); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 10px; }
-.session-box { display: inline-block; padding: 6px 16px; background: white; border-radius: 20px; border: 1px solid var(--border); font-size: 11px; color: #1E40AF; font-weight: 700; cursor: pointer; }
-
-.prog-card { background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #6366F1 100%); border-radius: 30px; padding: 30px; color: white; margin-top: 20px; box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2); }
-.prog-row { display: flex; justify-content: space-between; align-items: flex-start; }
-.prog-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; line-height: 1; }
-.prog-pct-big { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; }
-.prog-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; margin-top: 20px; }
-.prog-fill { height: 100%; background: white; transition: 0.6s; }
-
-.mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 30px; }
-.ms { background: white; border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); border: 1px solid var(--border); }
-.ms-n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1E40AF; }
-.ms-l { font-size: 10px; color: var(--muted); font-weight: 600; margin-top: 5px; }
-
-.add-form { background: #EFF6FF; padding: 20px; border-radius: 20px; margin: 25px 0; border: 1px dashed var(--rose); }
-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #BFDBFE; font-family: 'Nunito'; outline: none; box-sizing: border-box;}
-.btn-submit { width: 100%; background: var(--rose); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-
-/* ── LIST ── */
-.mk-card { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 15px; box-shadow: var(--shadow); overflow: hidden; }
-.mk-head { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.mk-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1; }
-.mk-title { font-weight: 700; color: #1E40AF; font-size: 15px; }
-
-.dropdown-trigger { width: 32px; height: 32px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1E40AF; cursor: pointer; border: none; font-size: 10px; transition: 0.3s; }
-.mk-card.open .dropdown-trigger { transform: rotate(180deg); background: var(--rose); color: white; }
-.mk-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0 15px; }
-.mk-card.open .mk-detail { max-height: 2000px; padding: 5px 15px 20px; border-top: 1px solid #F1F5F9; }
-
-.task-row { display: flex; align-items: center; gap: 12px; padding: 12px 10px; border-radius: 12px; cursor: pointer; margin-top: 8px; position: relative; transition: 0.2s; }
-.chk { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; flex-shrink: 0; position: relative; }
-.done .chk { background: #93C5FD; border-color: #93C5FD; }
-.done .chk::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: 900; }
-.t-info { flex: 1; }
-.t-name { font-size: 14px; font-weight: 700; color: #64748B; }
-.done .t-name { text-decoration: line-through; opacity: 0.6; }
-.t-dl { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-.btn-action { font-size: 16px; cursor: pointer; padding: 5px; transition: 0.2s; opacity: 0.5; display: flex; align-items: center; justify-content: center; }
-.btn-action:hover { opacity: 1; transform: scale(1.1); }
-.btn-edit-main { color: var(--muted); font-size: 14px; }
-.btn-edit-task { color: var(--rose); font-size: 15px; }
-.btn-del { color: #EF4444; }
-
-/* ── POP UP EDIT ── */
-#edit-modal {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center; z-index: 20000;
+.landing-content h2 { color: #1E3A8A; font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.landing-content input { 
+  width: 100%; padding: 16px; border-radius: 15px; border: 2px solid #BFDBFE; 
+  background: white; font-family: inherit; outline: none; margin-bottom: 15px; box-sizing: border-box; text-align: center;
 }
-.modal-content {
-  background: white; width: 90%; max-width: 380px; border-radius: 25px;
-  padding: 25px; box-shadow: var(--shadow); text-align: center;
-  animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+.btn-start { 
+  width: 100%; background: var(--primary); color: white; border: none; padding: 16px; 
+  border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; 
 }
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-.modal-content h3 { font-family: 'Playfair Display'; color: #1E40AF; margin-bottom: 20px; }
-.modal-content label { display: block; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; margin-left: 5px;}
-.modal-content input { margin-bottom: 12px; border: 1.5px solid #E2E8F0; width: 100%; padding: 12px; border-radius: 10px; box-sizing: border-box; font-family: 'Nunito'; outline: none; }
+/* ── LAYOUT ── */
+.wrap { max-width: 500px; margin: 0 auto; padding: 0 20px; }
+.header { padding: 45px 0 25px; text-align: center; }
+.brand-tag { font-size: 10px; font-weight: 800; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
 
-.modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-.btn-modal { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito'; }
-.btn-save { background: var(--rose); color: white; }
-.btn-cancel { background: #F1F5F9; color: var(--muted); }
+/* ── DASHBOARD ── */
+.prog-card { 
+  background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+  border-radius: 28px; padding: 30px; color: white; box-shadow: 0 15px 30px rgba(37, 99, 235, 0.25);
+}
+.prog-info { display: flex; justify-content: space-between; align-items: baseline; }
+.prog-val { font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: -2px; }
+.prog-bar { height: 10px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 20px; overflow: hidden; }
+.prog-fill { height: 100%; background: white; transition: 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
 
-.star { position: fixed; pointer-events: none; z-index: 9999; font-size: 20px; animation: star-fade 0.8s forwards; }
-@keyframes star-fade { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(180deg); opacity: 0; } }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+.stat-box { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 20px; text-align: center; backdrop-filter: blur(5px); }
+.stat-num { font-size: 1.5rem; font-weight: 700; display: block; }
+.stat-label { font-size: 9px; font-weight: 600; text-transform: uppercase; opacity: 0.8; letter-spacing: 1px; }
+
+/* ── FORM ── */
+.form-box { background: white; padding: 25px; border-radius: 24px; border: 1px solid var(--border); margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+input.form-input { 
+  width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; 
+  border: 1.5px solid var(--border); font-family: inherit; box-sizing: border-box; outline: none; transition: 0.2s; font-size: 14px;
+}
+input.form-input:focus { border-color: var(--primary); background: #F8FAFC; }
+.btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 14px; }
+
+/* ── LIST & ACCORDION ── */
+.course-group { background: white; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 18px; overflow: hidden; }
+.course-head { 
+  padding: 20px 24px; background: white; 
+  font-weight: 700; color: var(--primary); font-size: 16px;
+  display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+}
+.dropdown-icon { 
+  width: 28px; height: 28px; background: var(--primary); color: white; 
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+  font-size: 10px; transition: 0.3s; 
+}
+.course-group.open .dropdown-icon { transform: rotate(180deg); }
+
+.task-container { display: none; border-top: 1px solid var(--border); }
+.course-group.open .task-container { display: block; }
+
+.task-item { display: flex; align-items: center; gap: 15px; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.task-item:last-child { border-bottom: none; }
+.task-item.done { background: #F8FAFC; opacity: 0.6; }
+
+.check-box { width: 24px; height: 24px; border: 2.5px solid var(--border); border-radius: 8px; flex-shrink: 0; cursor: pointer; position: relative; transition: 0.2s; }
+.done .check-box { background: var(--primary); border-color: var(--primary); }
+.done .check-box::after { content: '✓'; color: white; position: absolute; left: 5px; top: -1px; font-weight: bold; font-size: 14px; }
+
+.task-info { flex: 1; }
+.task-name { font-size: 14px; font-weight: 600; }
+.done .task-name { text-decoration: line-through; }
+.task-date { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.action-btn { font-size: 14px; cursor: pointer; color: var(--muted); padding: 5px; transition: 0.2s; }
+.action-btn:hover { color: var(--primary); transform: scale(1.1); }
+
+/* ── MODAL ── */
+#edit-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 20000; }
+.modal-content { background: white; width: 90%; max-width: 380px; padding: 30px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+.star { position: fixed; pointer-events: none; z-index: 9999; font-size: 18px; animation: burst 0.7s ease-out forwards; }
 </style>
 </head>
 <body>
 
 <div id="edit-modal">
   <div class="modal-content">
-    <h3 id="modal-title">⚙️ Konfigurasi Data</h3>
-    <div id="modal-fields">
-      <div id="field-mk">
-        <label>Nama Mata Kuliah</label>
-        <input type="text" id="modal-mk-name">
-      </div>
-      <div id="field-task">
-        <label>Detail Kegiatan</label>
-        <input type="text" id="modal-task-name">
-        <label>Deadline</label>
-        <input type="text" id="modal-task-dl">
-      </div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
-      <button class="btn-modal btn-save" id="btn-confirm-save">Perbarui ✨</button>
+    <h3 style="margin:0 0 20px; font-weight:800; color:var(--primary)">Edit Jadwal</h3>
+    <input type="text" id="edit-mk" class="form-input" placeholder="Mata Kuliah">
+    <input type="text" id="edit-task-name" class="form-input" placeholder="Nama Tugas">
+    <input type="text" id="edit-dl" class="form-input" placeholder="Deadline">
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button class="btn-add" style="background:#F1F5F9; color:var(--muted)" onclick="closeModal()">Batal</button>
+      <button class="btn-add" onclick="saveEdit()">Simpan ✨</button>
     </div>
   </div>
 </div>
 
 <div id="landing-screen">
   <div class="landing-content">
-    <h2 style="font-family:'Playfair Display'; color:#1E40AF;">🌊 Halo Bestie!</h2>
-    <input type="text" id="in-welcome-name" placeholder="Masukan namamu disini bestie">
+    <h2>🌊 Halo Bestie!</h2>
+    <input type="text" id="user-input" placeholder="Masukan namamu disini bestie">
     <button class="btn-start" onclick="startApp()">Oke, Mulai Tracker! ✨</button>
   </div>
 </div>
 
-<div class="wrap">
+<div class="wrap fade-in">
   <div class="header">
-    <div class="crafted-by">CRAFTED BY HAAZIMA</div>
-    <h1 style="font-family: 'Playfair Display';">Matkul <em>Tracker</em></h1>
-    <div style="margin-top: 15px;"><div class="session-box" onclick="askName()">👤 User: <span id="user-display">...</span></div></div>
+    <div class="brand-tag">ACADEMIC TRACKER</div>
+    <h2 id="welcome-msg" style="margin: 0; font-weight:800; font-size: 2.2rem; color:var(--primary)">Halo! ✨</h2>
   </div>
 
   <div class="prog-card">
-    <div class="prog-row">
-      <div><div class="prog-num" id="g-done">0</div><div style="font-size:12px; opacity:0.8; margin-top:5px;">tugas selesai</div></div>
-      <div class="prog-pct-big" id="g-pct">0%</div>
+    <div class="prog-info">
+      <div>
+        <div style="font-size: 10px; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">Overall Progress</div>
+        <div class="prog-val" id="total-pct">0%</div>
+      </div>
+      <div id="task-count" style="font-size: 14px; font-weight: 600;">0/0 Selesai</div>
     </div>
-    <div class="prog-bar"><div class="prog-fill" id="g-fill" style="width: 0%"></div></div>
+    <div class="prog-bar"><div class="prog-fill" id="fill-bar" style="width: 0%"></div></div>
+    
+    <div class="stats-grid">
+        <div class="stat-box">
+            <span class="stat-num" id="count-mk">0</span>
+            <span class="stat-label">Courses</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-num" id="count-total">0</span>
+            <span class="stat-label">Schedules</span>
+        </div>
+    </div>
   </div>
 
-  <div class="mini-stats">
-    <div class="ms"><div class="ms-n" id="stat-diskusi">0</div><div class="ms-l">Diskusi</div></div>
-    <div class="ms"><div class="ms-n" id="stat-tugas">0</div><div class="ms-l">Tugas</div></div>
-    <div class="ms"><div class="ms-n">-</div><div class="ms-l">UAS</div></div>
-    <div class="ms"><div class="ms-n" id="stat-pct">0%</div><div class="ms-l">Total</div></div>
-  </div>
-
-  <div class="add-form">
-    <input type="text" id="in-mk" placeholder="Mata Kuliah...">
-    <input type="text" id="in-task" placeholder="Nama Tugas/Kegiatan...">
-    <input type="text" id="in-dl" placeholder="Deadline (ex: 19 Apr)">
-    <button class="btn-submit" onclick="addItem()">Tambahkan Tracker</button>
+  <div class="form-box">
+    <input type="text" id="in-mk" class="form-input" placeholder="Nama Mata Kuliah...">
+    <input type="text" id="in-task" class="form-input" placeholder="Tugas / Kegiatan...">
+    <input type="text" id="in-dl" class="form-input" placeholder="Deadline (Contoh: 28 Apr)">
+    <button class="btn-add" onclick="addItem()">Tambahkan Jadwal 🗓️</button>
   </div>
 
   <div id="main-list"></div>
 
-  <div style="text-align: center; padding: 40px 0; font-size: 11px; color: var(--muted);">
-    © 2026 · Built with ✨ by <b>Haazima</b><br>
-    Special for <b id="footer-display">...</b>
+  <div style="text-align:center; padding: 40px 0; opacity: 0.5; font-size: 10px; letter-spacing: 1px; font-weight: 600;">
+    DEVELOPED BY HAAZIMA © 2026
   </div>
 </div>
 
 <script>
-let db = JSON.parse(localStorage.getItem('hz_db_final')) || [];
-let openState = JSON.parse(localStorage.getItem('hz_open_state')) || {};
-let currentEditId = null;
-let currentEditMkOnly = false;
-let currentMkOrigin = "";
+// --- DATABASE URL ---
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyodArJdO-_MFU1fxT6CSgXWcwbWUgwZPsFeYaa8pm8ec5hizXsB0yAz4-dzzedN2AlrQ/exec"; 
+
+let data = JSON.parse(localStorage.getItem('smarty_pro_db')) || [];
+let openStates = JSON.parse(localStorage.getItem('smarty_pro_open')) || {};
 
 function startApp() {
-  const name = document.getElementById('in-welcome-name').value;
-  if(!name) return alert("Masukan nama Anda.");
-  localStorage.setItem('hz_bestie_name', name);
-  sessionStorage.setItem('bestie_name', name);
-  initUI(name);
-  document.getElementById('landing-screen').style.display = 'none';
-}
-
-function initUI(name) {
-  document.getElementById('user-display').textContent = name;
-  document.getElementById('footer-display').textContent = name;
-}
-
-function save() {
-  localStorage.setItem('hz_db_final', JSON.stringify(db));
-  localStorage.setItem('hz_open_state', JSON.stringify(openState));
-  render();
+  const name = document.getElementById('user-input').value;
+  if(!name) return alert("Panggil namamu dulu, Bestie!");
+  localStorage.setItem('uni_username', name);
+  location.reload();
 }
 
 function addItem() {
+  const user = localStorage.getItem('uni_username');
   const mk = document.getElementById('in-mk').value.trim();
   const task = document.getElementById('in-task').value.trim();
   const dl = document.getElementById('in-dl').value.trim();
-  if(!mk || !task) return alert("Matkul & Tugas wajib diisi!");
-  db.push({ id: Date.now(), mk, task, dl, done: false });
-  openState[mk] = true;
+
+  if(!mk || !task) return alert("Isi data dulu ya!");
+
+  const newItem = { id: Date.now(), mk, task, dl, done: false };
+  data.push(newItem);
+  openStates[mk] = true;
+  
+  // Kirim data baru ke Cloud
+  fetch(SCRIPT_URL, { 
+    method: 'POST', 
+    mode: 'no-cors', 
+    body: JSON.stringify({ user, mk, task, cat: "ProClean", dl, status: "Tugas Baru" }) 
+  });
+  
   document.getElementById('in-task').value = "";
-  document.getElementById('in-dl').value = "";
   save();
 }
 
-function deleteItem(id) {
-  if(confirm("Hapus item ini secara permanen?")) { db = db.filter(x => x.id !== id); save(); }
+function toggleDropdown(mk) {
+  openStates[mk] = !openStates[mk];
+  save();
 }
-
-function openEditTask(id) {
-  currentEditId = id;
-  currentEditMkOnly = false;
-  const item = db.find(x => x.id === id);
-  document.getElementById('modal-title').textContent = "⚙️ Detail Modifikasi";
-  document.getElementById('field-mk').style.display = "block";
-  document.getElementById('field-task').style.display = "block";
-  document.getElementById('modal-mk-name').value = item.mk;
-  document.getElementById('modal-task-name').value = item.task;
-  document.getElementById('modal-task-dl').value = item.dl;
-  document.getElementById('edit-modal').style.display = 'flex';
-}
-
-function openEditMk(mk) {
-  currentEditMkOnly = true;
-  currentMkOrigin = mk;
-  document.getElementById('modal-title').textContent = "⚙️ Pengaturan Matkul";
-  document.getElementById('field-mk').style.display = "block";
-  document.getElementById('field-task').style.display = "none";
-  document.getElementById('modal-mk-name').value = mk;
-  document.getElementById('edit-modal').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('edit-modal').style.display = 'none';
-  currentEditId = null;
-}
-
-document.getElementById('btn-confirm-save').onclick = function() {
-  const newMk = document.getElementById('modal-mk-name').value.trim();
-  if (currentEditMkOnly) {
-    if (newMk !== "") {
-      db.forEach(item => { if(item.mk === currentMkOrigin) item.mk = newMk; });
-      openState[newMk] = openState[currentMkOrigin];
-      delete openState[currentMkOrigin];
-      save(); closeModal();
-    }
-  } else {
-    const i = db.findIndex(x => x.id === currentEditId);
-    const newTask = document.getElementById('modal-task-name').value.trim();
-    const newDl = document.getElementById('modal-task-dl').value.trim();
-    if (newMk !== "" && newTask !== "") {
-      db[i].mk = newMk; db[i].task = newTask; db[i].dl = newDl;
-      openState[newMk] = true; save(); closeModal();
-    }
-  }
-};
 
 function toggleTask(id, el) {
-  const i = db.findIndex(x => x.id === id);
-  db[i].done = !db[i].done;
-  if(db[i].done) starBurst(el);
+  const idx = data.findIndex(x => x.id === id);
+  data[idx].done = !data[idx].done;
+  if(data[idx].done) triggerBurst(el);
   save();
 }
 
-function toggleDropdown(mk) { openState[mk] = !openState[mk]; save(); }
+function openEdit(id) {
+  const item = data.find(x => x.id === id);
+  document.getElementById('edit-mk').value = item.mk;
+  document.getElementById('edit-task-name').value = item.task;
+  document.getElementById('edit-dl').value = item.dl;
+  document.getElementById('edit-modal').setAttribute('data-id', id);
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function saveEdit() {
+  const user = localStorage.getItem('uni_username');
+  const id = document.getElementById('edit-modal').getAttribute('data-id');
+  const idx = data.findIndex(x => x.id == id);
+  
+  data[idx].mk = document.getElementById('edit-mk').value;
+  data[idx].task = document.getElementById('edit-task-name').value;
+  data[idx].dl = document.getElementById('edit-dl').value;
+  
+  // KIRIM STATUS UPDATE KE CLOUD
+  fetch(SCRIPT_URL, { 
+    method: 'POST', 
+    mode: 'no-cors', 
+    body: JSON.stringify({ 
+      user, 
+      mk: data[idx].mk, 
+      task: data[idx].task, 
+      cat: "ProClean", 
+      dl: data[idx].dl, 
+      status: "Update / Edit" 
+    }) 
+  });
+
+  closeModal(); 
+  save();
+}
+
+function closeModal() { document.getElementById('edit-modal').style.display = 'none'; }
+
+function deleteTask(id) {
+  if(confirm("Hapus jadwal ini?")) { data = data.filter(x => x.id != id); save(); }
+}
+
+function save() {
+  localStorage.setItem('smarty_pro_db', JSON.stringify(data));
+  localStorage.setItem('smarty_pro_open', JSON.stringify(openStates));
+  render();
+}
 
 function render() {
-  const container = document.getElementById('main-list');
-  container.innerHTML = "";
-  const done = db.filter(x => x.done).length;
-  const total = db.length;
-  const pct = total ? Math.round((done/total)*100) : 0;
+  const list = document.getElementById('main-list');
+  list.innerHTML = "";
+  const doneCount = data.filter(x => x.done).length;
+  const pct = data.length ? Math.round((doneCount/data.length)*100) : 0;
 
-  document.getElementById('g-done').textContent = done;
-  document.getElementById('g-pct').textContent = pct + "%";
-  document.getElementById('g-fill').style.width = pct + "%";
-  document.getElementById('stat-diskusi').textContent = db.filter(x => x.task.toLowerCase().includes('diskusi') && x.done).length;
-  document.getElementById('stat-tugas').textContent = db.filter(x => x.task.toLowerCase().includes('tugas') && x.done).length;
-  document.getElementById('stat-pct').textContent = pct + "%";
+  document.getElementById('total-pct').textContent = pct + "%";
+  document.getElementById('fill-bar').style.width = pct + "%";
+  document.getElementById('task-count').textContent = `${doneCount}/${data.length} Selesai`;
 
-  const grouped = db.reduce((acc, item) => {
-    if(!acc[item.mk]) acc[item.mk] = [];
-    acc[item.mk].push(item);
+  const grouped = data.reduce((acc, obj) => {
+    acc[obj.mk] = acc[obj.mk] || [];
+    acc[obj.mk].push(obj);
     return acc;
   }, {});
 
-  const keys = Object.keys(grouped);
-  if(keys.length === 0) {
-    container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--muted); font-size:12px; border:1px dashed var(--border); border-radius:20px;">Belum ada data tracker tersimpan. ✨</div>`;
-    return;
-  }
+  document.getElementById('count-mk').textContent = Object.keys(grouped).length;
+  document.getElementById('count-total').textContent = data.length;
 
-  keys.forEach(mk => {
+  Object.keys(grouped).forEach((mk) => {
     const card = document.createElement('div');
-    card.className = `mk-card ${openState[mk] ? 'open' : ''}`;
-    card.innerHTML = `
-      <div class="mk-head">
-        <div class="mk-title-wrap">
-          <div class="mk-title">📘 ${mk}</div>
-          <div class="btn-action btn-edit-main" onclick="openEditMk('${mk}')">⚙️</div>
-        </div>
-        <button class="dropdown-trigger" onclick="toggleDropdown('${mk}')">▼</button>
-      </div>`;
+    const isOpen = openStates[mk];
+    card.className = `course-group fade-in ${isOpen ? 'open' : ''}`;
     
-    const details = document.createElement('div');
-    details.className = "mk-detail";
+    card.innerHTML = `
+      <div class="course-head" onclick="toggleDropdown('${mk}')">
+        <span>📘 ${mk}</span>
+        <div class="dropdown-icon">▼</div>
+      </div>
+      <div class="task-container"></div>
+    `;
+
+    const container = card.querySelector('.task-container');
     grouped[mk].forEach(item => {
       const row = document.createElement('div');
-      row.className = `task-row ${item.done ? 'done' : ''}`;
-      row.onclick = (e) => { if (!e.target.closest('.btn-action')) toggleTask(item.id, row); };
+      row.className = `task-item ${item.done ? 'done' : ''}`;
       row.innerHTML = `
-        <div class="chk"></div>
-        <div class="t-info"><div class="t-name">${item.task}</div><div class="t-dl">⏰ ${item.dl || 'N/A'}</div></div>
-        <div class="actions">
-          <div class="btn-action btn-edit-task" onclick="openEditTask(${item.id})">⚙️</div>
-          <div class="btn-action btn-del" onclick="deleteItem(${item.id})">×</div>
-        </div>`;
-      details.appendChild(row);
+        <div class="check-box" onclick="toggleTask(${item.id}, this)"></div>
+        <div class="task-info" onclick="toggleTask(${item.id}, this)">
+          <div class="task-name">${item.task}</div>
+          <div class="task-date">⏰ ${item.dl || '-'}</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="action-btn" onclick="openEdit(${item.id})">⚙️</div>
+          <div class="action-btn" style="color:#EF4444" onclick="deleteTask(${item.id})">×</div>
+        </div>
+      `;
+      container.appendChild(row);
     });
-    card.appendChild(details);
-    container.appendChild(card);
+    list.appendChild(card);
   });
 }
 
-function starBurst(el) {
+function triggerBurst(el) {
   const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-  for (let i = 0; i < 10; i++) {
-    const s = document.createElement('div'); s.className = 'star'; s.innerHTML = '⭐';
-    s.style.left = cx + 'px'; s.style.top = cy + 'px';
-    const tx = (Math.random() - 0.5) * 200 + 'px', ty = (Math.random() - 0.5) * 200 + 'px';
-    s.style.setProperty('--tx', tx); s.style.setProperty('--ty', ty);
-    document.body.appendChild(s); setTimeout(() => s.remove(), 800);
+  for(let i=0; i<12; i++) {
+    const s = document.createElement('div');
+    s.className = 'star'; s.innerHTML = '●';
+    s.style.color = '#3B82F6';
+    s.style.left = (rect.left + rect.width/2) + 'px'; 
+    s.style.top = (rect.top + rect.height/2) + 'px';
+    s.style.setProperty('--tx', (Math.random()-0.5)*150+'px');
+    s.style.setProperty('--ty', (Math.random()-0.5)*150+'px');
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 700);
   }
 }
 
-function askName() {
-  const n = prompt("Ganti identitas pengguna?");
-  if(n) { localStorage.setItem('hz_bestie_name', n); sessionStorage.setItem('bestie_name', n); initUI(n); }
-}
-
 window.onload = () => {
-  const n = sessionStorage.getItem('bestie_name') || localStorage.getItem('hz_bestie_name');
-  if(n) { document.getElementById('landing-screen').style.display = 'none'; initUI(n); }
-  render();
+  const user = localStorage.getItem('uni_username');
+  if(user) {
+    document.getElementById('landing-screen').style.display = 'none';
+    document.getElementById('welcome-msg').textContent = `Halo, ${user}! ✨`;
+    render();
+  }
 };
 </script>
 </body>
